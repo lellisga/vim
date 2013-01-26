@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: filename_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 17 Nov 2012.
+" Last Modified: 24 Nov 2012.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ let s:source = {
       \ 'kind' : 'complfunc',
       \}
 
-function! s:source.initialize()"{{{
+function! s:source.initialize() "{{{
   " Initialize.
   call neocomplcache#set_completion_length(
         \ 'filename_complete', g:neocomplcache_auto_completion_start_length)
@@ -42,25 +42,26 @@ function! s:source.initialize()"{{{
         \ 'g:neocomplcache_source_rank',
         \ 'filename_complete', 3)
 endfunction"}}}
-function! s:source.finalize()"{{{
+function! s:source.finalize() "{{{
 endfunction"}}}
 
-function! s:source.get_keyword_pos(cur_text)"{{{
+function! s:source.get_keyword_pos(cur_text) "{{{
   let filetype = neocomplcache#get_context_filetype()
   if filetype ==# 'vimshell' || filetype ==# 'unite'
     return -1
   endif
 
-  if neocomplcache#is_auto_complete()
-        \ && a:cur_text =~ '\*$\|\.\.\+$\|/c\%[ygdrive/]$'
-    " Skip filename completion.
+  " Filename pattern.
+  let pattern = neocomplcache#get_keyword_pattern_end('filename')
+  let [cur_keyword_pos, cur_keyword_str] =
+        \ neocomplcache#match_word(a:cur_text, pattern)
+  if cur_keyword_str =~ '//' ||
+        \ (neocomplcache#is_auto_complete() &&
+        \   cur_keyword_str =~# '\*\|\.\.\+$\|/c\%[ygdrive/]$')
+    " Not filename pattern.
     return -1
   endif
 
-  " Filename pattern.
-  let pattern = neocomplcache#get_keyword_pattern_end('filename')
-  let [cur_keyword_pos, _] =
-        \ neocomplcache#match_word(a:cur_text, pattern)
   if neocomplcache#is_sources_complete() && cur_keyword_pos < 0
     let cur_keyword_pos = len(a:cur_text)
   endif
@@ -68,13 +69,13 @@ function! s:source.get_keyword_pos(cur_text)"{{{
   return cur_keyword_pos
 endfunction"}}}
 
-function! s:source.get_complete_words(cur_keyword_pos, cur_keyword_str)"{{{
+function! s:source.get_complete_words(cur_keyword_pos, cur_keyword_str) "{{{
   return s:get_glob_files(a:cur_keyword_str, '')
 endfunction"}}}
 
 let s:cached_files = {}
 
-function! s:get_glob_files(cur_keyword_str, path)"{{{
+function! s:get_glob_files(cur_keyword_str, path) "{{{
   let path = ',,' . substitute(a:path, '\.\%(,\|$\)\|,,', '', 'g')
 
   let cur_keyword_str = substitute(a:cur_keyword_str,
@@ -194,18 +195,18 @@ function! s:get_glob_files(cur_keyword_str, path)"{{{
 
   return dir_list + file_list
 endfunction"}}}
-function! s:caching_current_files()"{{{
+function! s:caching_current_files() "{{{
   let s:cached_files[getcwd()] = neocomplcache#util#glob('*')
   if !exists('vimproc#readdir')
     let s:cached_files[getcwd()] += neocomplcache#util#glob('.*')
   endif
 endfunction"}}}
 
-function! neocomplcache#sources#filename_complete#define()"{{{
+function! neocomplcache#sources#filename_complete#define() "{{{
   return s:source
 endfunction"}}}
 
-function! neocomplcache#sources#filename_complete#get_complete_words(cur_keyword_str, path)"{{{
+function! neocomplcache#sources#filename_complete#get_complete_words(cur_keyword_str, path) "{{{
   if !neocomplcache#is_enabled()
     return []
   endif
