@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/Users/lellisga/Projects/StackBuilders/rentwb'
 let g:netrw_dirhist_2='/Users/lellisga/.vim'
 let g:netrw_dirhist_3='/Users/lellisga/.vim/autoload'
+let g:netrw_dirhist_4='/Users/lellisga/Dropbox/Tutorials/clojure-koans'
+let g:netrw_dirhist_5='/Users/lellisga/Dropbox/Tutorials/clojure-koans/src'
+let g:netrw_dirhist_6='/Users/lellisga/Dropbox/Tutorials/clojure-koans/src/koans'
