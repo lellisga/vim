@@ -34,10 +34,13 @@ git_bundles = [
   "git://github.com/vim-scripts/IndexedSearch.git",
   "git://github.com/vim-scripts/jQuery.git",
   "git://github.com/Lokaltog/vim-powerline.git",
-  "git://github.com/vim-scripts/VimClojure.git",
+  # "git://github.com/vim-scripts/VimClojure.git",
   "git@github.com:jiangmiao/auto-pairs.git",
   # "https://github.com/derekwyatt/vim-scala.git",
   # "git@github.com:adimit/prolog.vim.git ",
+  "git://github.com/tpope/vim-fireplace.git",
+  "git://github.com/tpope/vim-classpath.git",
+  # "git://github.com/guns/vim-clojure-static.git"
 ]
 
 require 'fileutils'
